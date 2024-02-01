@@ -112,22 +112,28 @@ function checkInstances() {
       // One server
       } else if (instanceCount === 0) {
         const channel = client.channels.cache.get('1202020061221761165');   // GET channel ID
-        channel.send(`No open instances for Elysium   (None: ${formatTime(no_counter)}   Total: ${formatTime(total_counter)})`);   // shows placeID - channel.send(`There are no instances open for place ID ${placeId}.`);
-        instance_counter_tracker = 0;
-        total_counter++;
-        no_counter++;
-        yes_counter = 1; // Reset how long there has been a server up
+        if (instance_counter_tracker > 0) {
+          channel.send(`<@&1202351752574423050> All Elysiums have shut down   (Uptime: ${formatTime(yes_counter)}  |  Total: ${formatTime(total_counter)})`);
+          instance_counter_tracker = 0;
+          total_counter++;
+          no_counter++;
+          yes_counter = 1; // Reset how long there has been a server up
+        } else {
+          channel.send(`No open instances for Elysium   (None: ${formatTime(no_counter)}   Total: ${formatTime(total_counter)})`);   // shows placeID - channel.send(`There are no instances open for place ID ${placeId}.`);
+          total_counter++;
+          no_counter++;
+        }
       }
 
-      // Counters reset after 10 days if run constantly (unlikely). Only total counter will reset after 10 days all the time.
-      if (total_counter === 8640) {
-        total_counter = 1;
-      //  total_days_counter++;
-      } else if (no_counter === 8640) {
-        no_counter = 1;
-      } else if (yes_counter === 8640) {
-        yes_counter = 1;
-      }
+      // Counters reset after 1 days if run constantly (unlikely). Only total counter will reset after 1 days all the time.
+      // if (total_counter === 8640) {
+      //   total_counter = 1;
+      // //  total_days_counter++;
+      // } else if (no_counter === 8640) {
+      //   no_counter = 1;
+      // } else if (yes_counter === 8640) {
+      //   yes_counter = 1;
+      // }
     }).catch(err => {
       console.error(err);
     });
