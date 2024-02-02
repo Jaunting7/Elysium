@@ -1,10 +1,10 @@
 require("dotenv").config();
-
+ 
 const { Client, IntentsBitField } = require("discord.js");
 const noblox = require("noblox.js");
 const express = require("express")
 const app = express();
-
+ 
 const client = new Client({
   intents: [
     IntentsBitField.Flags.Guilds,
@@ -13,51 +13,58 @@ const client = new Client({
     IntentsBitField.Flags.MessageContent,
   ],
 });
-
+ 
 app.listen(3000, '0.0.0.0', () => {
   console.log('Project is running!');
 });
-
+ 
 app.get("/", (req, res) => {
   res.send("Hello world!");
 })
+ 
+let placeID;
+let roleID;
+let channel;
 
 client.on("ready", (c) => {
   console.log(`✅ ${c.user.tag} is online.`);
+  placeID = "14894612329"; // GET place ID
+  roleID = "1202351752574423050"; // GET role ID
+  channel = client.channels.cache.get('1202020061221761165');   // GET channel ID
 });
-
+ 
 client.on("messageCreate", async (message) => {
   if (message.content.startsWith("check")) {
-    const placeId = message.content.split(" ")[1];
-    const instances = await noblox.getGameInstances(placeId);
+    const placeID = message.content.split(" ")[1];
+    const instances = await noblox.getGameInstances(placeID);
     const instanceCount = instances.length;
     if (instanceCount === 0) {
-      message.reply(`There are no instances open for place ID ${placeId}.`);
+      message.reply(`There are no instances open for place ID ${placeID}.`);
     } else {
       message.reply(
-        `There are ${instanceCount} instances open for place ID ${placeId}.`,
+        `There are ${instanceCount} instances open for place ID ${placeID}.`,
       );
     }
   }
 });
-
-
+ 
+ 
 // Time Elapsed Functions
 function totalTimeElapsed(total_end) {
   let elapsed = total_end - total_start;  // elapsed time in milliseconds
   return formatTime(elapsed/1000); // convert milliseconds to seconds
 }
-
+ 
 function yesTimeElapsed(yes_end) {
   let elapsed = yes_end - yes_start;  // elapsed time in milliseconds
   return formatTime(elapsed/1000); // convert milliseconds to seconds
 }
-
+ 
 function noTimeElapsed(no_end) {
   let elapsed = no_end - no_start;  // elapsed time in milliseconds
   return formatTime(elapsed/1000); // convert milliseconds to seconds
 }
-
+ 
 // Formats the seconds into d, h, m, s
 function formatTime(seconds) {
 //  const seconds = totalSeconds;
@@ -69,9 +76,9 @@ function formatTime(seconds) {
     minutes += 1;
     remainingSeconds = 0;
   }
-
+ 
   let result = "";
-
+ 
   if (days > 0) {
       result += `${days}d `;
   }
@@ -82,37 +89,34 @@ function formatTime(seconds) {
       result += `${minutes}m `;
   }
   result += `${remainingSeconds}s`;
-
+ 
   return result.trim(); // Remove leading/trailing whitespaces
 }
-
-
+ 
+ 
 // Counters
 let total_counter = 1; // Used to track total_start
 let no_counter = 1; // Used to track no_start
 let yes_counter = 1; // Used to track yes_start
-
+ 
 let instance_counter_tracker = 0; // stores instance value
-
+ 
 let total_start = Date.now(); 
 let total_end = Date.now();
 let no_start = Date.now();
 let yes_start = Date.now();
-
-
+ 
+ 
 // Main
 function checkInstances() {
-  const placeId = "14894612329"; // GET place ID
-  const roleID = "1202351752574423050"; // GET role ID
-  const channel = client.channels.cache.get('1202020061221761165');   // GET channel ID
   console.log(`The channel ID is: ${channel}`);
   noblox
-    .getGameInstances(placeId)
+    .getGameInstances(placeID)
     .then((instances) => {
       const instanceCount = instances.length;
-
+ 
       total_end = Date.now(); // 0s first run.
-
+ 
       // More than one server
       if (instanceCount > 0) {
         if (yes_counter === 1) {
@@ -128,19 +132,19 @@ function checkInstances() {
         // When server instances increase
         if (instance_counter_tracker < instanceCount) { 
           yes_end = Date.now(); // Could place only one above but put here for accurate times                   
-          channel.send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeID - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeId}.`);
+          channel.send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeID - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeID}.`);
           instance_counter_tracker = instanceCount;
         // When server instances decrease
         } else if (instance_counter_tracker > instanceCount) {
           yes_end = Date.now();                     
-          channel.send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeID - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeId}.`);
+          channel.send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeID - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeID}.`);
           instance_counter_tracker = instanceCount;
         // When server instance stays the same
         } else {
           yes_end = Date.now()
           channel.send(`Elysium has **${instanceCount}** instance${instanceCount !== 1 ? 's' : ''} open    (Uptime: ${yesTimeElapsed(yes_end)}  |  Total: ${totalTimeElapsed(total_end)})`);
         }
-
+ 
       // One server
       } else if (instanceCount === 0) {
         if (no_counter === 1) {
@@ -158,17 +162,14 @@ function checkInstances() {
           instance_counter_tracker = 0;   // Reset counter because only will only be used when server goes back up
         } else {
           no_end = Date.now();
-          channel.send(`No open instances for Elysium   (None: ${noTimeElapsed(no_end)}  |  Total: ${totalTimeElapsed(total_end)})`);   // shows placeID - channel.send(`There are no instances open for place ID ${placeId}.`);
+          channel.send(`No open instances for Elysium   (None: ${noTimeElapsed(no_end)}  |  Total: ${totalTimeElapsed(total_end)})`);   // shows placeID - channel.send(`There are no instances open for place ID ${placeID}.`);
         }
       }
     }).catch(err => {
       console.error(err);
     });
   }
-
+ 
 setInterval(checkInstances, 10000); // Milliseconds
-
+ 
 client.login(process.env.TOKEN);
-
-
-
