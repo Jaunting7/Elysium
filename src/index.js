@@ -109,13 +109,9 @@ let yes_start = Date.now();
  
 // Main
 function checkInstances() {
-<<<<<<< HEAD
-  console.log(`The channel ID is: ${channel}`);
-=======
   const placeId = "14894612329"; // GET place ID
   const roleID = "1202351752574423050"; // GET role ID
   const channel = client.channels.cache.get('1202020061221761165');   // GET channel ID
->>>>>>> parent of 0971d09 (potential fix, removed null, added channel ID log)
   noblox
     .getGameInstances(placeId)
     .then((instances) => {
