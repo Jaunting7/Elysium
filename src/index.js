@@ -88,9 +88,9 @@ function formatTime(seconds) {
 
 
 // Counters
-let total_counter = 1; // Total bot uptime
-let no_counter = 1; // Time that there is no server
-let yes_counter = 1; // Time that there is a server
+let total_counter = 1; // Used to track total_start
+let no_counter = 1; // Used to track no_start
+let yes_counter = 1; // Used to track yes_start
 
 let instance_counter_tracker = 0; // stores instance value
 
@@ -102,7 +102,9 @@ let yes_start = Date.now();
 
 // Main
 function checkInstances() {
-  const placeId = "14894612329"; // Replace with your place ID
+  const placeId = "14894612329"; // GET place ID
+  const roleID = "1202351752574423050"; // GET role ID
+  const channel = client.channels.cache.get('1202020061221761165');   // GET channel ID
   noblox
     .getGameInstances(placeId)
     .then((instances) => {
@@ -119,26 +121,23 @@ function checkInstances() {
         }
         if (total_counter === 1) {
           total_start = Date.now();
+          total_counter = 2; // ASDADUAIDSHADASDADSADASD ADDED THIS ONE LAST NIGHT BUDDY AAAAAAAAAAAAAAAAAAA1923812391381239213812931283@#@#@#@#!@(*#@!&#@!)
         }
         no_end = Date.now();
-        const channel = client.channels.cache.get('1202020061221761165');   // GET channel ID
         // When server instances increase
         if (instance_counter_tracker < instanceCount) { 
           yes_end = Date.now(); // Could place only one above but put here for accurate times                   
-          channel.send(`<@&1202351752574423050> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeID - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeId}.`);
+          channel.send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeID - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeId}.`);
           instance_counter_tracker = instanceCount;
-          total_counter++;
         // When server instances decrease
         } else if (instance_counter_tracker > instanceCount) {
           yes_end = Date.now();                     
-          channel.send(`<@&1202351752574423050> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeID - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeId}.`);
+          channel.send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeID - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeId}.`);
           instance_counter_tracker = instanceCount;
-          total_counter++;
         // When server instance stays the same
         } else {
           yes_end = Date.now()
           channel.send(`Elysium has **${instanceCount}** instance${instanceCount !== 1 ? 's' : ''} open    (Uptime: ${yesTimeElapsed(yes_end)}  |  Total: ${totalTimeElapsed(total_end)})`);
-          total_counter++;
         }
 
       // One server
@@ -146,21 +145,19 @@ function checkInstances() {
         if (no_counter === 1) {
           no_start = Date.now();
           no_counter = null;
-          yes_counter = 1;  // Reset counter for tracking start time of an up server (only for yes_start)
+          yes_counter = 1;  // Reset counter for tracking the start time of when a server is up (only for yes_start)
         }
         if (total_counter === 1) {
           total_start = Date.now();
+          total_counter = 2;
         }
         yes_end = Date.now();
-        const channel = client.channels.cache.get('1202020061221761165');   // GET channel ID
         if (instance_counter_tracker > 0) {
-          channel.send(`<@&1202351752574423050> All Elysiums have shut down   (Uptime: ${yesTimeElapsed(yes_end)}  |  Total: ${totalTimeElapsed(total_end)}`);
+          channel.send(`<@&${roleID}> All Elysiums have shut down   (Uptime: ${yesTimeElapsed(yes_end)}  |  Total: ${totalTimeElapsed(total_end)}`);
           instance_counter_tracker = 0;   // Reset counter because only will only be used when server goes back up
-          total_counter++;
         } else {
           no_end = Date.now();
           channel.send(`No open instances for Elysium   (None: ${noTimeElapsed(no_end)}  |  Total: ${totalTimeElapsed(total_end)})`);   // shows placeID - channel.send(`There are no instances open for place ID ${placeId}.`);
-          total_counter++;
         }
       }
     }).catch(err => {
