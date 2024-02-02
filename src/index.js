@@ -22,27 +22,27 @@ app.get("/", (req, res) => {
   res.send("Hello world!");
 })
  
-let placeID;
+let placeId;
 let roleID;
 let channel;
 
 client.on("ready", (c) => {
   console.log(`✅ ${c.user.tag} is online.`);
-  placeID = "14894612329"; // GET place ID
+  placeId = "14894612329"; // GET place ID
   roleID = "1202351752574423050"; // GET role ID
   channel = client.channels.cache.get('1202020061221761165');   // GET channel ID
 });
  
 client.on("messageCreate", async (message) => {
   if (message.content.startsWith("check")) {
-    const placeID = message.content.split(" ")[1];
-    const instances = await noblox.getGameInstances(placeID);
+    const placeId = message.content.split(" ")[1];
+    const instances = await noblox.getGameInstances(placeId);
     const instanceCount = instances.length;
     if (instanceCount === 0) {
-      message.reply(`There are no instances open for place ID ${placeID}.`);
+      message.reply(`There are no instances open for place ID ${placeId}.`);
     } else {
       message.reply(
-        `There are ${instanceCount} instances open for place ID ${placeID}.`,
+        `There are ${instanceCount} instances open for place ID ${placeId}.`,
       );
     }
   }
@@ -111,7 +111,7 @@ let yes_start = Date.now();
 function checkInstances() {
   console.log(`The channel ID is: ${channel}`);
   noblox
-    .getGameInstances(placeID)
+    .getGameInstances(placeId)
     .then((instances) => {
       const instanceCount = instances.length;
  
@@ -132,12 +132,12 @@ function checkInstances() {
         // When server instances increase
         if (instance_counter_tracker < instanceCount) { 
           yes_end = Date.now(); // Could place only one above but put here for accurate times                   
-          channel.send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeID - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeID}.`);
+          channel.send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeId - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeId}.`);
           instance_counter_tracker = instanceCount;
         // When server instances decrease
         } else if (instance_counter_tracker > instanceCount) {
           yes_end = Date.now();                     
-          channel.send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeID - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeID}.`);
+          channel.send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeId - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeId}.`);
           instance_counter_tracker = instanceCount;
         // When server instance stays the same
         } else {
@@ -162,14 +162,14 @@ function checkInstances() {
           instance_counter_tracker = 0;   // Reset counter because only will only be used when server goes back up
         } else {
           no_end = Date.now();
-          channel.send(`No open instances for Elysium   (None: ${noTimeElapsed(no_end)}  |  Total: ${totalTimeElapsed(total_end)})`);   // shows placeID - channel.send(`There are no instances open for place ID ${placeID}.`);
+          channel.send(`No open instances for Elysium   (None: ${noTimeElapsed(no_end)}  |  Total: ${totalTimeElapsed(total_end)})`);   // shows placeId - channel.send(`There are no instances open for place ID ${placeId}.`);
         }
       }
     }).catch(err => {
       console.error(err);
     });
   }
- 
+ // changed
 setInterval(checkInstances, 10000); // Milliseconds
  
 client.login(process.env.TOKEN);
