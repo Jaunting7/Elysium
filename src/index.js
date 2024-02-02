@@ -105,6 +105,7 @@ function checkInstances() {
   const placeId = "14894612329"; // GET place ID
   const roleID = "1202351752574423050"; // GET role ID
   const channel = client.channels.cache.get('1202020061221761165');   // GET channel ID
+  console.log(`The channel ID is: ${channel}`);
   noblox
     .getGameInstances(placeId)
     .then((instances) => {
@@ -116,12 +117,12 @@ function checkInstances() {
       if (instanceCount > 0) {
         if (yes_counter === 1) {
           yes_start = Date.now();
-          yes_counter = null;
+          yes_counter = 2;
           no_counter = 1;  // Reset counter for tracking start time of having no servers (only for no_start)
         }
         if (total_counter === 1) {
           total_start = Date.now();
-          total_counter = 2; // ASDADUAIDSHADASDADSADASD ADDED THIS ONE LAST NIGHT BUDDY AAAAAAAAAAAAAAAAAAA1923812391381239213812931283@#@#@#@#!@(*#@!&#@!)
+          total_counter = 2;
         }
         no_end = Date.now();
         // When server instances increase
@@ -144,7 +145,7 @@ function checkInstances() {
       } else if (instanceCount === 0) {
         if (no_counter === 1) {
           no_start = Date.now();
-          no_counter = null;
+          no_counter = 2;
           yes_counter = 1;  // Reset counter for tracking the start time of when a server is up (only for yes_start)
         }
         if (total_counter === 1) {
