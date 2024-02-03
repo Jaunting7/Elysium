@@ -25,9 +25,6 @@ app.get("/", (req, res) => {
 
 client.on("ready", (c) => {
   console.log(`✅ ${c.user.tag} is online.`);
-  placeId = "14894612329"; // GET place ID
-  roleID = "1202351752574423050"; // GET role ID
-  channel = client.channels.cache.get('1202020061221761165');   // GET channel ID
 });
  
 client.on("messageCreate", async (message) => {
