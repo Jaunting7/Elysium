@@ -108,7 +108,7 @@ let yes_start = Date.now();
 async function checkInstances() {
   const placeId = "14894612329"; // GET place ID
   const roleID = "1202351752574423050"; // GET role ID
-  const channel = await client.channels.cache.fetch('1202020061221761165');   // GET channel ID
+  const channel = await client.channels.fetch('1202020061221761165');   // GET channel ID
   console.log(`The role ID is: ${roleID}`);
   console.log(`The place ID is: ${placeId}`);
   console.log(`The channel ID is: ${channel}`);
