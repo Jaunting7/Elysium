@@ -61,18 +61,29 @@ function noTimeElapsed(no_end) {
  
 // Formats the seconds into d, h, m, s
 function formatTime(seconds) {
-//  const seconds = totalSeconds;
-  const days = Math.floor(seconds / 864000); // 864000 seconds in a day
-  const hours = Math.floor((seconds % 864000) / 3600); // 3600 seconds in an hour
-  let minutes = Math.floor((seconds % 3600) / 60); // 60 seconds in a minute
-  let remainingSeconds = Math.round(seconds % 60);
-  if (remainingSeconds === 60) {
-    minutes += 1;
-    remainingSeconds = 0;
+  let days_calculation = (((seconds /60) /60) /24); // /60 gives minutes, /60 gives hours, /24 gives days
+  let days = Math.floor(days_calculation)
+  days_calculation = days_calculation - days;
+
+  let hours_calculation = days_calculation * 24; // 3600 seconds in an hour
+  let hours = Math.floor(hours_calculation);
+  hours_calculation = hours_calculation - hours;
+
+  let minutes_calculation = hours_calculation * 60; // 60 seconds in a minute
+  let minutes = Math.floor(minutes_calculation);
+  minutes_calculation = minutes_calculation - minutes;
+
+  let seconds_calculation = minutes_calculation * 60;
+  let seconds2 = Math.round(seconds_calculation);
+  seconds_calculation = seconds_calculation - seconds2;
+
+  if (seconds2 === 60) {
+      seconds2 = 0;
+      minutes += 1;
   }
- 
+
   let result = "";
- 
+
   if (days > 0) {
       result += `${days}d `;
   }
@@ -82,11 +93,10 @@ function formatTime(seconds) {
   if (minutes > 0 || hours > 0 || days > 0) {
       result += `${minutes}m `;
   }
-  result += `${remainingSeconds}s`;
- 
-  return result.trim(); // Remove leading/trailing whitespaces
+  result += `${seconds2}s`;
+  return result;
 }
- 
+
  
 // Counters
 let total_counter = 1; // Used to track total_start
@@ -131,19 +141,16 @@ async function checkInstances() {
         // When server instances increase
         if (instance_counter_tracker < instanceCount) { 
           yes_end = Date.now(); // Could place only one above but put here for accurate times
-          const channel = client.channels.cache.get('1202020061221761165')
           channel.send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeId - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeId}.`);
           instance_counter_tracker = instanceCount;
         // When server instances decrease
         } else if (instance_counter_tracker > instanceCount) {
-          yes_end = Date.now();
-          const channel = client.channels.cache.get('1202020061221761165')                     
+          yes_end = Date.now();                     
           channel.send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeId - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeId}.`);
           instance_counter_tracker = instanceCount;
         // When server instance stays the same
         } else {
           yes_end = Date.now()
-          const channel = client.channels.cache.get('1202020061221761165')
           channel.send(`Elysium has **${instanceCount}** instance${instanceCount !== 1 ? 's' : ''} open    (Uptime: ${yesTimeElapsed(yes_end)}  |  Total: ${totalTimeElapsed(total_end)})`);
         }
  
@@ -160,12 +167,10 @@ async function checkInstances() {
         }
         yes_end = Date.now();
         if (instance_counter_tracker > 0) {
-          const channel = client.channels.cache.get('1202020061221761165')
           channel.send(`<@&${roleID}> All Elysiums have shut down   (Uptime: ${yesTimeElapsed(yes_end)}  |  Total: ${totalTimeElapsed(total_end)}`);
           instance_counter_tracker = 0;   // Reset counter because only will only be used when server goes back up
         } else {
           no_end = Date.now();
-          const channel = client.channels.cache.get('1202020061221761165')
           channel.send(`No open instances for Elysium   (None: ${noTimeElapsed(no_end)}  |  Total: ${totalTimeElapsed(total_end)})`);   // shows placeId - channel.send(`There are no instances open for place ID ${placeId}.`);
         }
       }
