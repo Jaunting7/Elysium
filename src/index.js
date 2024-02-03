@@ -137,17 +137,20 @@ function checkInstances() {
         // When server instances increase
         if (instance_counter_tracker < instanceCount) { 
           yes_end = Date.now(); // Could place only one above but put here for accurate times
-          client.channels.cache.get('1202020061221761165').send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeId - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeId}.`);
+          const channel = client.channels.cache.get('1202020061221761165')
+          channel.send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeId - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeId}.`);
           instance_counter_tracker = instanceCount;
         // When server instances decrease
         } else if (instance_counter_tracker > instanceCount) {
-          yes_end = Date.now();              
-          client.channels.cache.get('1202020061221761165').send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeId - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeId}.`);
+          yes_end = Date.now();
+          const channel = client.channels.cache.get('1202020061221761165')                     
+          channel.send(`<@&${roleID}> There are **${instanceCount}** instance(s) open for Elysium   (Uptime: ${yesTimeElapsed(yes_end)},   Total: ${totalTimeElapsed(total_end)})`);   // shows placeId - channel.send(`<@254344094636179466> There are ${instanceCount} instances open for place ID ${placeId}.`);
           instance_counter_tracker = instanceCount;
         // When server instance stays the same
         } else {
           yes_end = Date.now()
-          client.channels.cache.get('1202020061221761165').send(`Elysium has **${instanceCount}** instance${instanceCount !== 1 ? 's' : ''} open    (Uptime: ${yesTimeElapsed(yes_end)}  |  Total: ${totalTimeElapsed(total_end)})`);
+          const channel = client.channels.cache.get('1202020061221761165')
+          channel.send(`Elysium has **${instanceCount}** instance${instanceCount !== 1 ? 's' : ''} open    (Uptime: ${yesTimeElapsed(yes_end)}  |  Total: ${totalTimeElapsed(total_end)})`);
         }
  
       // One server
@@ -163,11 +166,13 @@ function checkInstances() {
         }
         yes_end = Date.now();
         if (instance_counter_tracker > 0) {
-          client.channels.cache.get('1202323057520152696').send(`<@&${roleID}> All Elysiums have shut down   (Uptime: ${yesTimeElapsed(yes_end)}  |  Total: ${totalTimeElapsed(total_end)}`);
+          const channel = client.channels.cache.get('1202020061221761165')
+          channel.send(`<@&${roleID}> All Elysiums have shut down   (Uptime: ${yesTimeElapsed(yes_end)}  |  Total: ${totalTimeElapsed(total_end)}`);
           instance_counter_tracker = 0;   // Reset counter because only will only be used when server goes back up
         } else {
           no_end = Date.now();
-          client.channels.cache.get('1202323057520152696').send(`No open instances for Elysium   (None: ${noTimeElapsed(no_end)}  |  Total: ${totalTimeElapsed(total_end)})`);   // shows placeId - channel.send(`There are no instances open for place ID ${placeId}.`);
+          const channel = client.channels.cache.get('1202020061221761165')
+          channel.send(`No open instances for Elysium   (None: ${noTimeElapsed(no_end)}  |  Total: ${totalTimeElapsed(total_end)})`);   // shows placeId - channel.send(`There are no instances open for place ID ${placeId}.`);
         }
       }
     }).catch(err => {
